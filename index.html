@@ -1369,6 +1369,40 @@ button .arrow {
     </div>
   </section>
 
+
+  <section class="portfolio-section" id="portfolio" aria-labelledby="feed-portfolio-title">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="mono">Portofolio / Instagram</div>
+        <h2 id="feed-portfolio-title">Lihat contoh karya.<br><em>Temukan arah visualmu.</em></h2>
+        <p class="lead">Pilihan desain Creativein.std yang dibagikan di Instagram—sebagai inspirasi untuk konten brand-mu.</p>
+      </div>
+      <div class="portfolio-shell">
+        <div class="arch-gallery" role="group" aria-label="Galeri portofolio Instagram Creativein.std">
+          <div class="arch-stage" id="feedPortfolioStage">
+            <article class="arch-card" tabindex="0" data-title="Feed visual / 01" data-category="FEED VISUAL / 01"><img src="assets/1.jpg" alt="Contoh desain feed Creativein.std" draggable="false" loading="lazy"><div class="arch-caption"><b>Feed visual / 01</b><small>Creativein.std / 01</small></div></article>
+            <article class="arch-card" tabindex="0" data-title="Feed visual / 02" data-category="FEED VISUAL / 02"><img src="assets/2.jpg" alt="Contoh desain feed Creativein.std" draggable="false" loading="lazy"><div class="arch-caption"><b>Feed visual / 02</b><small>Creativein.std / 02</small></div></article>
+            <article class="arch-card" tabindex="0" data-title="Feed visual / 03" data-category="FEED VISUAL / 03"><img src="assets/3.jpg" alt="Contoh desain feed Creativein.std" draggable="false" loading="lazy"><div class="arch-caption"><b>Feed visual / 03</b><small>Creativein.std / 03</small></div></article>
+            <article class="arch-card" tabindex="0" data-title="Feed visual / 04" data-category="FEED VISUAL / 04"><img src="assets/4.jpg" alt="Contoh desain feed Creativein.std" draggable="false" loading="lazy"><div class="arch-caption"><b>Feed visual / 04</b><small>Creativein.std / 04</small></div></article>
+            <article class="arch-card" tabindex="0" data-title="Feed visual / 05" data-category="FEED VISUAL / 05"><img src="assets/5.jpg" alt="Contoh desain feed Creativein.std" draggable="false" loading="lazy"><div class="arch-caption"><b>Feed visual / 05</b><small>Creativein.std / 05</small></div></article>
+            <article class="arch-card" tabindex="0" data-title="Feed visual / 06" data-category="FEED VISUAL / 06"><img src="assets/6.jpg" alt="Contoh desain feed Creativein.std" draggable="false" loading="lazy"><div class="arch-caption"><b>Feed visual / 06</b><small>Creativein.std / 06</small></div></article>
+            <article class="arch-card" tabindex="0" data-title="Feed visual / 07" data-category="FEED VISUAL / 07"><img src="assets/7.jpg" alt="Contoh desain feed Creativein.std" draggable="false" loading="lazy"><div class="arch-caption"><b>Feed visual / 07</b><small>Creativein.std / 07</small></div></article>
+          </div>
+        </div>
+        <div class="portfolio-controls" aria-label="Kontrol galeri portofolio">
+          <button class="portfolio-control" type="button" id="feedPortfolioPrev" aria-label="Karya sebelumnya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+          <span class="portfolio-count" id="feedPortfolioCount" aria-live="polite">01 / 07</span>
+          <button class="portfolio-control" type="button" id="feedPortfolioNext" aria-label="Karya berikutnya"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18-6-6 6-6"/></svg></button>
+        </div>
+        <div class="portfolio-status" id="feedPortfolioStatus" aria-live="polite">Portofolio Instagram / Creativein.std</div>
+      </div>
+      <div class="portfolio-foot">
+        <p>Setiap desain berangkat dari kebutuhan brand dan pesan yang ingin disampaikan.</p>
+        <a class="portfolio-link" href="https://www.instagram.com/creativein.ig/" target="_blank" rel="noopener noreferrer">Lihat Instagram <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+
   <section class="sp-process" aria-labelledby="feed-process-title">
     <div class="sp-wrap sp-process-layout">
       <div class="sp-process-copy">
@@ -1442,5 +1476,80 @@ button .arrow {
  });
 })();
 </script>
+
+<script id="feed-portfolio-interactions">
+(()=>{
+  const stage=document.getElementById('feedPortfolioStage');
+  if(!stage)return;
+  const cards=Array.from(stage.querySelectorAll('.arch-card'));
+  const count=document.getElementById('feedPortfolioCount');
+  const status=document.getElementById('feedPortfolioStatus');
+  if(!cards.length||!count||!status)return;
+  let active=Math.floor(cards.length/2);
+  function render(){
+    const total=cards.length;
+    const mobile=window.matchMedia('(max-width:760px)').matches;
+    const width=stage.clientWidth;
+    const cardWidth=mobile?Math.min(148,width*.31):Math.min(184,width*.184);
+    const gap=cardWidth*.58;
+    cards.forEach((card,index)=>{
+      const offset=index-active;
+      const isActive=index===active;
+      const x=offset*gap;
+      const y=Math.abs(offset)*18;
+      card.style.transform=isActive
+        ?'translate(-50%,-50%) translateY(-16px) scale(1.08)'
+        :'translate(-50%,-50%) translate('+x+'px,'+y+'px) rotate('+(offset*6)+'deg)';
+      card.style.zIndex=String(isActive?cards.length+1:cards.length-Math.abs(offset));
+      card.classList.toggle('is-active',isActive);
+      card.setAttribute('aria-label',(card.dataset.title||'Karya portofolio')+(isActive?', dipilih':''));
+    });
+    count.textContent=String(active+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+    status.textContent=(cards[active].dataset.category||'Portofolio Instagram')+' · CREATIVEIN.STD';
+  }
+  function move(delta){active=(active+delta+cards.length)%cards.length;render();}
+  document.getElementById('feedPortfolioPrev').addEventListener('click',()=>move(-1));
+  document.getElementById('feedPortfolioNext').addEventListener('click',()=>move(1));
+  cards.forEach((card,index)=>{
+    card.addEventListener('focus',()=>{active=index;render();});
+    card.addEventListener('click',()=>{active=index;render();});
+    card.addEventListener('keydown',event=>{
+      if(event.key==='Enter'||event.key===' '){event.preventDefault();active=index;render();}
+      if(event.key==='ArrowLeft')move(-1);
+      if(event.key==='ArrowRight')move(1);
+    });
+  });
+  window.addEventListener('resize',render);
+  render();
+})();
+</script>
+<script id="feed-instagram-api">
+(async()=>{
+  const INSTAGRAM_ACCESS_TOKEN='IGAAf84Mo5bOhBZAGFxZADRHaEVqOG9Hblk0amE4WjdiUHEtLUNMZATF3di1PSmxfbWJGOUpPb3d6NXlocjhtYTVRR1p0dkxfb05ucU9rWjBKWEhPczRqb1NWYU90Qm91bHRmbW5SZA0FPczRvWVhtV0hoLUZAQZAEtMcjBTZA1BVX0taOAZDZD';
+  const INSTAGRAM_API_VERSION='v27.0';
+  const stage=document.getElementById('feedPortfolioStage');
+  if(!stage||!INSTAGRAM_ACCESS_TOKEN)return;
+  try{
+    const endpoint=new URL('https://graph.instagram.com/'+INSTAGRAM_API_VERSION+'/me/media');
+    endpoint.searchParams.set('fields','id,caption,media_type,media_url,thumbnail_url,permalink,timestamp');
+    endpoint.searchParams.set('limit','12');
+    endpoint.searchParams.set('access_token',INSTAGRAM_ACCESS_TOKEN);
+    const response=await fetch(endpoint);
+    if(!response.ok)return;
+    const payload=await response.json();
+    const posts=(payload.data||[]).filter(post=>post.media_type==='IMAGE'||post.media_type==='CAROUSEL_ALBUM');
+    const cards=Array.from(stage.querySelectorAll('.arch-card'));
+    cards.forEach((card,index)=>{
+      const post=posts[index];
+      const image=card.querySelector('img');
+      if(!post||!image)return;
+      image.src=post.media_url||post.thumbnail_url;
+      image.alt=(post.caption||'Karya Instagram Creativein.std').slice(0,180);
+      if(post.timestamp)card.dataset.timestamp=post.timestamp;
+    });
+  }catch(error){console.warn('Instagram portfolio could not be loaded.',error)}
+})();
+</script>
+
 </body>
 </html>
